@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">MyanmarCurrencyExchangeRate</string>
+    <string name="title_activity_main_drawer">MainDrawerActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_exchangelist_fragment">Hello exchange list fragment</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_currencyinfo_fragment">Hello currency info fragment</string>
+
+    <string name="ex_load_error_message">Oop! Can\'t Load Data</string>
+
+    <string name="ex_choose_date_label">Choose Date</string>
+    
+    <string name="ex_header_cur_type">Currency Type</string>
+    <string name="ex_header_ex_rate">Exchange Rate(MMR)</string>
 </resources>

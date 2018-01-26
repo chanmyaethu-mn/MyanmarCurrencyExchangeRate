@@ -1,7 +1,7 @@
 package com.example.chan.myanmarcurrencyexchangerate.api;
 
 
-import com.example.chan.myanmarcurrencyexchangerate.dto.LatestDto;
+import com.example.chan.myanmarcurrencyexchangerate.dto.ExchangeRateInfoDto;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -13,5 +13,5 @@ import retrofit2.http.GET;
 public interface LatestService {
 
     @GET("api/latest")
-    Call<LatestDto> getLatestExchangeRate();
+    Call<ExchangeRateInfoDto> getLatestExchangeRate();
 }

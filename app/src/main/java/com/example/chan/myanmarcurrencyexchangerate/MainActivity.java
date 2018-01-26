@@ -10,8 +10,8 @@ import com.example.chan.myanmarcurrencyexchangerate.api.CurrencyInfoService;
 import com.example.chan.myanmarcurrencyexchangerate.api.ExchangeHistoryService;
 import com.example.chan.myanmarcurrencyexchangerate.api.LatestService;
 import com.example.chan.myanmarcurrencyexchangerate.dto.CurrencyInfoDto;
+import com.example.chan.myanmarcurrencyexchangerate.dto.ExchangeRateInfoDto;
 import com.example.chan.myanmarcurrencyexchangerate.dto.HistoryExchangeInfoDto;
-import com.example.chan.myanmarcurrencyexchangerate.dto.LatestDto;
 import com.example.chan.myanmarcurrencyexchangerate.helper.RetrofitHelper;
 
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void testCallLatest() {
         LatestService latestService = RetrofitHelper.getLatestExchangeRateApi();
-        Call<LatestDto> latestCall = latestService.getLatestExchangeRate();
+        Call<ExchangeRateInfoDto> latestCall = latestService.getLatestExchangeRate();
 
         getLatestExchangeRate(latestCall, this);
 
@@ -46,7 +46,37 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void getLatestExchangeRate(final Call<LatestDto> call, Context context) {
+    private void getLatestExchangeRate(final Call<ExchangeRateInfoDto> call, Context context) {
+        AsyncTask<Void, Void, ExchangeRateInfoDto> asyncTask = new AsyncTask<Void, Void, ExchangeRateInfoDto>() {
+            @Override
+            protected ExchangeRateInfoDto doInBackground(Void... voids) {
+                ExchangeRateInfoDto exchangeRateInfoDto = null;
+                try {
+                    Response<ExchangeRateInfoDto> response = call.execute();
+                    if (null != response.body()) {
+                        exchangeRateInfoDto = new ExchangeRateInfoDto();
+                        exchangeRateInfoDto.setInfo(response.body().getInfo());
+                        exchangeRateInfoDto.setTimestamp(response.body().getTimestamp());
+                        exchangeRateInfoDto.setDescription(response.body().getDescription());
+                        exchangeRateInfoDto.setRates(response.body().getRates());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return exchangeRateInfoDto;
+            }
+
+            @Override
+            protected void onPostExecute(ExchangeRateInfoDto testDto) {
+                super.onPostExecute(testDto);
+                Log.e("LatestExchange ==> ", testDto.toString());
+            }
+        };
+
+        asyncTask.execute();
+    }
+
+    /*private void getLatestExchangeRate(final Call<LatestDto> call, Context context) {
         AsyncTask<Void, Void, LatestDto> asyncTask = new AsyncTask<Void, Void, LatestDto>() {
             @Override
             protected LatestDto doInBackground(Void... voids) {
@@ -74,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
         asyncTask.execute();
-    }
+    }*/
 
     private void getExchangeHistory(final Call<HistoryExchangeInfoDto> call, Context context) {
         AsyncTask<Void, Void, HistoryExchangeInfoDto> asyncTask = new AsyncTask<Void, Void, HistoryExchangeInfoDto>() {
