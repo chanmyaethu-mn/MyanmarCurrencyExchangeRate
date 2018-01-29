@@ -13,10 +13,17 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_currencyinfo_fragment">Hello currency info fragment</string>
 
-    <string name="ex_load_error_message">Oop! Can\'t Load Data</string>
+    <string name="ex_load_error_message">Oop! No data found.</string>
+    <string name="no_internet">Oop! No Internet Connection.</string>
 
     <string name="ex_choose_date_label">Choose Date</string>
-    
+
     <string name="ex_header_cur_type">Currency Type</string>
     <string name="ex_header_ex_rate">Exchange Rate(MMR)</string>
+
+    <string name="country">Country</string>
+    <string name="value">Value</string>
+    <string name="exchange_rate">Exchange Rate</string>
+
+    <string name="cd_value">1/=K</string>
 </resources>

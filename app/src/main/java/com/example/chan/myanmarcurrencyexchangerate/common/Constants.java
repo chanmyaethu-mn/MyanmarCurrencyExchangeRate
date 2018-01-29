@@ -15,4 +15,10 @@ public final class Constants {
     public static final int CURRENCY_INFO_INDEX = 1;
 
     public static final String DD_MM_YYYY = "dd-MM-yyyy";
+
+    public static final String CURRENCY_TYPE = "CURRENCY_TYPE";
+
+    public static final String COUNTRY = "COUNTRY";
+
+    public static final String EXCHANGE_RATE = "EXCHANGE_RATE";
 }

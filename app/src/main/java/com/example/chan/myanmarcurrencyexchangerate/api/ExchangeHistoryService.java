@@ -1,6 +1,7 @@
 package com.example.chan.myanmarcurrencyexchangerate.api;
 
 
+import com.example.chan.myanmarcurrencyexchangerate.dto.ExchangeRateInfoDto;
 import com.example.chan.myanmarcurrencyexchangerate.dto.HistoryExchangeInfoDto;
 
 import retrofit2.Call;
@@ -13,5 +14,5 @@ import retrofit2.http.Path;
 
 public interface ExchangeHistoryService {
     @GET("api/history/{date}")
-    Call<HistoryExchangeInfoDto> getExchangeHistory(@Path("date") String date);
+    Call<ExchangeRateInfoDto> getExchangeHistory(@Path("date") String date);
 }

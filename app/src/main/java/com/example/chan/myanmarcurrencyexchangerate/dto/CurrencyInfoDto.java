@@ -1,21 +1,23 @@
 package com.example.chan.myanmarcurrencyexchangerate.dto;
 
+import java.util.Map;
+
 /**
  * Created by techfun on 1/25/2018.
  */
 
 public class CurrencyInfoDto {
-    private Currencies currencies;
+    private Map<String, String> currencies;
 
     private String description;
 
     private String info;
 
-    public Currencies getCurrencies() {
+    public Map<String, String> getCurrencies() {
         return currencies;
     }
 
-    public void setCurrencies(Currencies currencies) {
+    public void setCurrencies(Map<String, String> currencies) {
         this.currencies = currencies;
     }
 
@@ -37,6 +39,10 @@ public class CurrencyInfoDto {
 
     @Override
     public String toString() {
-        return "ClassPojo [currencies = " + currencies + ", description = " + description + ", info = " + info + "]";
+        return "CurrencyInfoDto{" +
+                "currencies=" + currencies +
+                ", description='" + description + '\'' +
+                ", info='" + info + '\'' +
+                '}';
     }
 }

@@ -1,22 +1,26 @@
 package com.example.chan.myanmarcurrencyexchangerate.fragment;
 
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.chan.myanmarcurrencyexchangerate.R;
 import com.example.chan.myanmarcurrencyexchangerate.adapter.ExchangeListAdapter;
+import com.example.chan.myanmarcurrencyexchangerate.api.ExchangeHistoryService;
 import com.example.chan.myanmarcurrencyexchangerate.api.LatestService;
 import com.example.chan.myanmarcurrencyexchangerate.common.Constants;
+import com.example.chan.myanmarcurrencyexchangerate.common.helper.ConnectionHelper;
 import com.example.chan.myanmarcurrencyexchangerate.common.helper.DateHelper;
 import com.example.chan.myanmarcurrencyexchangerate.dto.ExchangeListItemInfoDto;
 import com.example.chan.myanmarcurrencyexchangerate.dto.ExchangeRateInfoDto;
@@ -24,6 +28,7 @@ import com.example.chan.myanmarcurrencyexchangerate.helper.RetrofitHelper;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -52,6 +57,8 @@ public class ExchangeListFragment extends Fragment {
 
     private ProgressBar progressBar;
     private TextView errorTextView;
+
+    private DatePickerDialog datePickerDialog;
 
     public ExchangeListFragment() {
         // Required empty public constructor
@@ -100,27 +107,41 @@ public class ExchangeListFragment extends Fragment {
         // Hide error message
         errorTextView.setVisibility(View.GONE);
 
+        registerEvents();
+
         return view;
     }
 
     private void loadExchangeList() {
-       /* ExchangeListItemInfoDto dto = new ExchangeListItemInfoDto();
-        dto.setCurrencyType("CAD");
-        dto.setExchangeRate("1000.356");
-        List<ExchangeListItemInfoDto> list = new ArrayList<>();
-        list.add(dto);
-        list.add(dto);
-        list.add(dto);
-        list.add(dto);
 
-        ExchangeListAdapter adapter = new ExchangeListAdapter(this.getContext(), list);
+        AsyncTask<Void, Void, Boolean> asyncTask = new AsyncTask<Void, Void, Boolean>() {
 
-        exListView.setAdapter(adapter);*/
+            @Override
+            protected void onPreExecute() {
+                exListView.setVisibility(View.GONE);
+                errorTextView.setVisibility(View.GONE);
+                progressBar.setVisibility(View.VISIBLE);
+            }
 
-        LatestService latestService = RetrofitHelper.getLatestExchangeRateApi();
-        Call<ExchangeRateInfoDto> latestCall = latestService.getLatestExchangeRate();
+            @Override
+            protected Boolean doInBackground(Void... voids) {
+                return ConnectionHelper.isInternetAvailable();
+            }
 
-        getExchangeRate(latestCall, this.getContext());
+            @Override
+            protected void onPostExecute(Boolean isConAvailable) {
+                if (isConAvailable) {
+                    LatestService latestService = RetrofitHelper.getLatestExchangeRateApi();
+                    Call<ExchangeRateInfoDto> latestCall = latestService.getLatestExchangeRate();
+                    getExchangeRate(latestCall, ExchangeListFragment.this.getContext());
+                } else {
+                    errorTextView.setText(R.string.no_internet);
+                    showError();
+                }
+            }
+        };
+
+        asyncTask.execute();
     }
 
     private void registerUIs(View view) {
@@ -133,6 +154,66 @@ public class ExchangeListFragment extends Fragment {
     }
 
     private void registerEvents() {
+        exDateTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDatePicker();
+            }
+        });
+    }
+
+    private void showDatePicker() {
+        // calender class's instance and get current date , month and year from calender
+        final Calendar c = Calendar.getInstance();
+        int mYear = c.get(Calendar.YEAR); // current year
+        int mMonth = c.get(Calendar.MONTH); // current month
+        int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
+
+        datePickerDialog = new DatePickerDialog(ExchangeListFragment.this.getContext(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year,
+                                  int monthOfYear, int dayOfMonth) {
+                String chooseDateString = dayOfMonth + "-" + monthOfYear + 1 + "-" + year;
+                String exDate = DateHelper.fromatDateString(chooseDateString, Constants.DD_MM_YYYY);
+                exDateTextView.setText(exDate);
+
+                loadExchangeHistoryList(exDate);
+            }
+        }, mYear, mMonth, mDay);
+
+        datePickerDialog.show();
+    }
+
+    private void loadExchangeHistoryList(@NonNull final String historyDate) {
+
+        AsyncTask<Void, Void, Boolean> asyncTask = new AsyncTask<Void, Void, Boolean>() {
+
+            @Override
+            protected void onPreExecute() {
+                exListView.setVisibility(View.GONE);
+                errorTextView.setVisibility(View.GONE);
+                progressBar.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            protected Boolean doInBackground(Void... voids) {
+                return ConnectionHelper.isInternetAvailable();
+            }
+
+            @Override
+            protected void onPostExecute(Boolean isConAvailable) {
+                if (isConAvailable) {
+                    ExchangeHistoryService exchangeHistoryService = RetrofitHelper.getExchangeHistoryApi();
+                    Call<ExchangeRateInfoDto> historyCall = exchangeHistoryService.getExchangeHistory(historyDate);
+                    getExchangeRate(historyCall, ExchangeListFragment.this.getContext());
+                } else {
+                    errorTextView.setText(R.string.no_internet);
+                    showError();
+                }
+            }
+        };
+
+        asyncTask.execute();
 
     }
 
@@ -158,9 +239,6 @@ public class ExchangeListFragment extends Fragment {
 
             @Override
             protected void onPostExecute(ExchangeRateInfoDto exchangeRateInfoDto) {
-                /*super.onPostExecute(testDto);
-                Log.e("LatestExchange ==> ", testDto.toString());*/
-                Log.e("ExchangeRate ==> ", exchangeRateInfoDto.toString());
                 bindExchangeList(exchangeRateInfoDto);
             }
         };
@@ -177,13 +255,24 @@ public class ExchangeListFragment extends Fragment {
             List<ExchangeListItemInfoDto> exchangeList = getExchangeList(exchangeRateInfoDto.getRates());
             ExchangeListAdapter adapter = new ExchangeListAdapter(this.getContext(), exchangeList);
 
-            View header = getLayoutInflater().inflate(R.layout.ex_list_header, null);
-            exListView.addHeaderView(header);
-            exListView.setAdapter(adapter);
+            if (null == exListView.getAdapter()) {
+                View header = getLayoutInflater().inflate(R.layout.ex_list_header, null);
+                exListView.addHeaderView(header);
+
+                exListView.setAdapter(adapter);
+            } else {
+                exListView.setAdapter(adapter);
+            }
+            exListView.setVisibility(View.VISIBLE);
         } else {
-            progressBar.setVisibility(View.GONE);
-            errorTextView.setVisibility(View.VISIBLE);
+            showError();
         }
+    }
+
+    private void showError() {
+        exListView.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
+        errorTextView.setVisibility(View.VISIBLE);
     }
 
     private List<ExchangeListItemInfoDto> getExchangeList(Map<String, String> rates) {

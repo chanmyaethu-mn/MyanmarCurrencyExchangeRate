@@ -25,4 +25,17 @@ public final class DateHelper {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         return sdf.format(calendar.getTime());
     }
+
+    public static String fromatDateString(@NonNull String dateString,@NonNull String format) {
+        Date date = null;
+        String resultDate = null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(format);
+            date = sdf.parse(dateString);
+            resultDate = sdf.format(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultDate;
+    }
 }

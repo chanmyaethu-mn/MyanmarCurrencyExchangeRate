@@ -35,9 +35,9 @@ public class MainActivity extends AppCompatActivity {
 
         getLatestExchangeRate(latestCall, this);
 
-        ExchangeHistoryService exchangeHistoryService = RetrofitHelper.getExchangeHistoryApi();
-        Call<HistoryExchangeInfoDto> historyCall = exchangeHistoryService.getExchangeHistory("25-01-2018");
-        getExchangeHistory(historyCall, this);
+        /*ExchangeHistoryService exchangeHistoryService = RetrofitHelper.getExchangeHistoryApi();
+        Call<ExchangeRateInfoDto> historyCall = exchangeHistoryService.getExchangeHistory("25-01-2018");
+        getExchangeHistory(historyCall, this);*/
 
 
         CurrencyInfoService currencyInfoService = RetrofitHelper.getCurrencyInfoApi();
