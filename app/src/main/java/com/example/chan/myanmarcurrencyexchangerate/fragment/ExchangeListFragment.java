@@ -247,7 +247,7 @@ public class ExchangeListFragment extends Fragment {
     }
 
     private void bindExchangeList(ExchangeRateInfoDto exchangeRateInfoDto) {
-        if (0 != exchangeRateInfoDto.getRates().size()) {
+        if (null != exchangeRateInfoDto && 0 != exchangeRateInfoDto.getRates().size()) {
             progressBar.setVisibility(View.GONE);
             String exDate = DateHelper.convertTimeStampToDateString(exchangeRateInfoDto.getTimestamp(), Constants.DD_MM_YYYY);
             exDateTextView.setText(exDate);

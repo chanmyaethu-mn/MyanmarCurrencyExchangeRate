@@ -170,7 +170,7 @@ public class CurrencyInfoFragment extends Fragment {
     }
 
     private void bindCurrencyInfoList(CurrencyInfoDto currencyInfoDto) {
-        if (0 != currencyInfoDto.getCurrencies().size()) {
+        if ( null !=  currencyInfoDto && 0 != currencyInfoDto.getCurrencies().size()) {
             progressBar.setVisibility(View.GONE);
 
             final List<CurrencyListItemInfoDto> currencyList = getCurrencyListItemList(currencyInfoDto.getCurrencies());
@@ -185,9 +185,15 @@ public class CurrencyInfoFragment extends Fragment {
             ctListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+
+                    // to prevent header click
+                    if (0 == position) {
+                        return;
+                    }
+
                     LatestService latestService = RetrofitHelper.getLatestExchangeRateApi();
                     Call<ExchangeRateInfoDto> latestCall = latestService.getLatestExchangeRate();
-                    loadCurrencyInfoDetail(currencyList, position, latestCall);
+                    loadCurrencyInfoDetail(currencyList, position-=1, latestCall);
                 }
             });
         } else {

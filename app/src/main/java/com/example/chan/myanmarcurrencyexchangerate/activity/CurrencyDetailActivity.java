@@ -2,6 +2,7 @@ package com.example.chan.myanmarcurrencyexchangerate.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.chan.myanmarcurrencyexchangerate.R;
@@ -21,6 +22,8 @@ public class CurrencyDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_currency_detail);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         registerUIs();
 
@@ -44,5 +47,16 @@ public class CurrencyDetailActivity extends AppCompatActivity {
         cdCountryTextView.setText(country);
         cdValueTextView.setText(R.string.cd_value);
         cdExchangeRateTextView.setText(exchangeRate);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return true;
+        }
     }
 }
