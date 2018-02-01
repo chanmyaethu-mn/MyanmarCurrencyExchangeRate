@@ -43,6 +43,8 @@ public class CurrencyDetailActivity extends AppCompatActivity {
         String country = (String) bundle.get(Constants.COUNTRY);
         String exchangeRate = (String) bundle.get(Constants.EXCHANGE_RATE);
 
+        setTitle(country);
+
         cdCurTypeTextView.setText(currencyType);
         cdCountryTextView.setText(country);
         cdValueTextView.setText(R.string.cd_value);

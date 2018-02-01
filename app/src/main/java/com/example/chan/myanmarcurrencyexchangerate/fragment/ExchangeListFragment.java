@@ -3,6 +3,7 @@ package com.example.chan.myanmarcurrencyexchangerate.fragment;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,18 +11,23 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.chan.myanmarcurrencyexchangerate.R;
+import com.example.chan.myanmarcurrencyexchangerate.activity.CurrencyDetailActivity;
 import com.example.chan.myanmarcurrencyexchangerate.adapter.ExchangeListAdapter;
+import com.example.chan.myanmarcurrencyexchangerate.api.CurrencyInfoService;
 import com.example.chan.myanmarcurrencyexchangerate.api.ExchangeHistoryService;
 import com.example.chan.myanmarcurrencyexchangerate.api.LatestService;
 import com.example.chan.myanmarcurrencyexchangerate.common.Constants;
 import com.example.chan.myanmarcurrencyexchangerate.common.helper.ConnectionHelper;
 import com.example.chan.myanmarcurrencyexchangerate.common.helper.DateHelper;
+import com.example.chan.myanmarcurrencyexchangerate.dto.CurrencyInfoDto;
+import com.example.chan.myanmarcurrencyexchangerate.dto.CurrencyListItemInfoDto;
 import com.example.chan.myanmarcurrencyexchangerate.dto.ExchangeListItemInfoDto;
 import com.example.chan.myanmarcurrencyexchangerate.dto.ExchangeRateInfoDto;
 import com.example.chan.myanmarcurrencyexchangerate.helper.RetrofitHelper;
@@ -173,13 +179,17 @@ public class ExchangeListFragment extends Fragment {
             @Override
             public void onDateSet(DatePicker datePicker, int year,
                                   int monthOfYear, int dayOfMonth) {
-                String chooseDateString = dayOfMonth + "-" + monthOfYear + 1 + "-" + year;
+                monthOfYear += 1;
+                String chooseDateString = dayOfMonth + "-" + monthOfYear + "-" + year;
                 String exDate = DateHelper.fromatDateString(chooseDateString, Constants.DD_MM_YYYY);
                 exDateTextView.setText(exDate);
 
                 loadExchangeHistoryList(exDate);
             }
         }, mYear, mMonth, mDay);
+
+        // Disable future date.
+        datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
 
         datePickerDialog.show();
     }
@@ -252,7 +262,7 @@ public class ExchangeListFragment extends Fragment {
             String exDate = DateHelper.convertTimeStampToDateString(exchangeRateInfoDto.getTimestamp(), Constants.DD_MM_YYYY);
             exDateTextView.setText(exDate);
 
-            List<ExchangeListItemInfoDto> exchangeList = getExchangeList(exchangeRateInfoDto.getRates());
+            final List<ExchangeListItemInfoDto> exchangeList = getExchangeList(exchangeRateInfoDto.getRates());
             ExchangeListAdapter adapter = new ExchangeListAdapter(this.getContext(), exchangeList);
 
             if (null == exListView.getAdapter()) {
@@ -264,9 +274,81 @@ public class ExchangeListFragment extends Fragment {
                 exListView.setAdapter(adapter);
             }
             exListView.setVisibility(View.VISIBLE);
+
+            exListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                    if (0 == position) {
+                        // if header is clicked do noting.
+                        return;
+                    } else {
+                        CurrencyInfoService currencyInfoService = RetrofitHelper.getCurrencyInfoApi();
+                        Call<CurrencyInfoDto> currencyInfoCall = currencyInfoService.getCurrencyInfo();
+                        position -= 1;
+                        loadExchangeInfoDetail(exchangeList, position, currencyInfoCall);
+                    }
+                }
+            });
         } else {
             showError();
         }
+    }
+
+    private void loadExchangeInfoDetail(final List<ExchangeListItemInfoDto> exchangeList, final int position, final Call<CurrencyInfoDto> call) {
+
+        AsyncTask<Void, Void, CurrencyInfoDto> asyncTask = new AsyncTask<Void, Void, CurrencyInfoDto>() {
+
+            @Override
+            protected void onPreExecute() {
+                progressBar.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            protected CurrencyInfoDto doInBackground(Void... voids) {
+                CurrencyInfoDto currencyInfoDto = null;
+                if (ConnectionHelper.isInternetAvailable()) {
+                    try {
+                        Response<CurrencyInfoDto> response = call.execute();
+                        if (null != response.body()) {
+                            currencyInfoDto = new CurrencyInfoDto();
+                            currencyInfoDto.setInfo(response.body().getInfo());
+                            currencyInfoDto.setDescription(response.body().getDescription());
+                            currencyInfoDto.setCurrencies(response.body().getCurrencies());
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return currencyInfoDto;
+            }
+
+            @Override
+            protected void onPostExecute(CurrencyInfoDto  currencyInfoDto) {
+                if (null != currencyInfoDto && currencyInfoDto.getCurrencies().size() > 0) {
+                    String currencyType = exchangeList.get(position).getCurrencyType();
+                    String country = currencyInfoDto.getCurrencies().get(currencyType);
+                    String exchangeRate = exchangeList.get(position).getExchangeRate();
+
+                    progressBar.setVisibility(View.GONE);
+
+                    launchExchangeInfoDetail(currencyType, country, exchangeRate);
+                } else {
+                    showError();
+                }
+            }
+        };
+
+        asyncTask.execute();
+    }
+
+    private void launchExchangeInfoDetail(String currencyType, String country, String exchangeRate) {
+        Intent intent = new Intent(getActivity(), CurrencyDetailActivity.class);
+        intent.putExtra(Constants.CURRENCY_TYPE, currencyType);
+        intent.putExtra(Constants.COUNTRY, country);
+        intent.putExtra(Constants.EXCHANGE_RATE, exchangeRate);
+
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
     }
 
     private void showError() {

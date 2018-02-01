@@ -2,29 +2,22 @@ package com.example.chan.myanmarcurrencyexchangerate.fragment;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.chan.myanmarcurrencyexchangerate.R;
-import com.example.chan.myanmarcurrencyexchangerate.activity.CurrencyDetailActivity;
 import com.example.chan.myanmarcurrencyexchangerate.adapter.CurrencyInfoListAdapter;
-import com.example.chan.myanmarcurrencyexchangerate.adapter.ExchangeListAdapter;
 import com.example.chan.myanmarcurrencyexchangerate.api.CurrencyInfoService;
-import com.example.chan.myanmarcurrencyexchangerate.api.LatestService;
-import com.example.chan.myanmarcurrencyexchangerate.common.Constants;
 import com.example.chan.myanmarcurrencyexchangerate.common.helper.ConnectionHelper;
 import com.example.chan.myanmarcurrencyexchangerate.dto.CurrencyInfoDto;
 import com.example.chan.myanmarcurrencyexchangerate.dto.CurrencyListItemInfoDto;
-import com.example.chan.myanmarcurrencyexchangerate.dto.ExchangeRateInfoDto;
 import com.example.chan.myanmarcurrencyexchangerate.helper.RetrofitHelper;
 
 import java.io.IOException;
@@ -170,7 +163,7 @@ public class CurrencyInfoFragment extends Fragment {
     }
 
     private void bindCurrencyInfoList(CurrencyInfoDto currencyInfoDto) {
-        if ( null !=  currencyInfoDto && 0 != currencyInfoDto.getCurrencies().size()) {
+        if (null != currencyInfoDto && 0 != currencyInfoDto.getCurrencies().size()) {
             progressBar.setVisibility(View.GONE);
 
             final List<CurrencyListItemInfoDto> currencyList = getCurrencyListItemList(currencyInfoDto.getCurrencies());
@@ -182,7 +175,7 @@ public class CurrencyInfoFragment extends Fragment {
             ctListView.setAdapter(adapter);
             ctListView.setVisibility(View.VISIBLE);
 
-            ctListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            /*ctListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 
@@ -195,13 +188,13 @@ public class CurrencyInfoFragment extends Fragment {
                     Call<ExchangeRateInfoDto> latestCall = latestService.getLatestExchangeRate();
                     loadCurrencyInfoDetail(currencyList, position-=1, latestCall);
                 }
-            });
+            });*/
         } else {
             showError();
         }
     }
 
-    private void loadCurrencyInfoDetail(final List<CurrencyListItemInfoDto> currencyList, final int position, final Call<ExchangeRateInfoDto> call) {
+    /*private void loadCurrencyInfoDetail(final List<CurrencyListItemInfoDto> currencyList, final int position, final Call<ExchangeRateInfoDto> call) {
 
         AsyncTask<Void, Void, ExchangeRateInfoDto> asyncTask = new AsyncTask<Void, Void, ExchangeRateInfoDto>() {
             boolean isConAvailable;
@@ -244,16 +237,16 @@ public class CurrencyInfoFragment extends Fragment {
         };
 
         asyncTask.execute();
-    }
+    }*/
 
-    private void launchCurrencyInfoDetail(String currencyType, String country, String exchangeRate) {
+    /*private void launchCurrencyInfoDetail(String currencyType, String country, String exchangeRate) {
         Intent intent = new Intent(getActivity(), CurrencyDetailActivity.class);
         intent.putExtra(Constants.CURRENCY_TYPE, currencyType);
         intent.putExtra(Constants.COUNTRY, country);
         intent.putExtra(Constants.EXCHANGE_RATE, exchangeRate);
 
         startActivity(intent);
-    }
+    }*/
 
     private List<CurrencyListItemInfoDto> getCurrencyListItemList(Map<String, String> currency) {
         Set<String> keySet = currency.keySet();
