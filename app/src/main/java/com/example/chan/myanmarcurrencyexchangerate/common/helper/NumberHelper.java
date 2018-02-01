@@ -1,5 +1,8 @@
 package com.example.chan.myanmarcurrencyexchangerate.common.helper;
 
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +14,16 @@ import java.util.stream.Collectors;
 
 public final class NumberHelper {
 
-    /*public static String convertMMToEn(String inputString) {
+    /**
+     * It will convert myanmar number to english number
+     * @param inputString "၀၁-၀၂-၂၀၁၈"
+     * @return "01-02-2018"
+     */
+    public static final String convertMMToEn(@NonNull String inputString) {
+
+        String result = "";
+        String[] strArr = inputString.split("");
+
         Map<String, String> DICT = new HashMap<>();
         {
             DICT.put("၀", "0");
@@ -26,9 +38,15 @@ public final class NumberHelper {
             DICT.put("၉", "9");
         }
 
-        inputString.replace()
-        return Arrays.stream(inputString.split(""))
-                .map(c -> DICT.getOrDefault(c, c))
-                .collect(Collectors.joining());
-    }*/
+        for (String curString : strArr) {
+            String tmpStr = DICT.get(curString);
+            if (TextUtils.isEmpty(tmpStr)) {
+                result += curString;
+            } else {
+                result += tmpStr;
+            }
+        }
+
+        return result;
+    }
 }

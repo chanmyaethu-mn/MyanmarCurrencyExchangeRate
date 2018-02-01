@@ -26,6 +26,8 @@ import com.example.chan.myanmarcurrencyexchangerate.api.LatestService;
 import com.example.chan.myanmarcurrencyexchangerate.common.Constants;
 import com.example.chan.myanmarcurrencyexchangerate.common.helper.ConnectionHelper;
 import com.example.chan.myanmarcurrencyexchangerate.common.helper.DateHelper;
+import com.example.chan.myanmarcurrencyexchangerate.common.helper.LocaleHelper;
+import com.example.chan.myanmarcurrencyexchangerate.common.helper.NumberHelper;
 import com.example.chan.myanmarcurrencyexchangerate.dto.CurrencyInfoDto;
 import com.example.chan.myanmarcurrencyexchangerate.dto.ExchangeListItemInfoDto;
 import com.example.chan.myanmarcurrencyexchangerate.dto.ExchangeRateInfoDto;
@@ -185,10 +187,11 @@ public class ExchangeListFragment extends Fragment {
                                   int monthOfYear, int dayOfMonth) {
                 monthOfYear += 1;
                 String chooseDateString = dayOfMonth + "-" + monthOfYear + "-" + year;
+
                 String exDate = DateHelper.fromatDateString(chooseDateString, Constants.DD_MM_YYYY);
                 exDateTextView.setText(exDate);
 
-                loadExchangeHistoryList(exDate);
+                loadExchangeHistoryList(chooseDateString);
             }
         }, mYear, mMonth, mDay);
 
