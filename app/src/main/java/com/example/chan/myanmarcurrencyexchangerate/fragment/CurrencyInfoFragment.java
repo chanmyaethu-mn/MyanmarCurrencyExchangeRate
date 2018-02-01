@@ -18,7 +18,7 @@ import com.example.chan.myanmarcurrencyexchangerate.api.CurrencyInfoService;
 import com.example.chan.myanmarcurrencyexchangerate.common.helper.ConnectionHelper;
 import com.example.chan.myanmarcurrencyexchangerate.dto.CurrencyInfoDto;
 import com.example.chan.myanmarcurrencyexchangerate.dto.CurrencyListItemInfoDto;
-import com.example.chan.myanmarcurrencyexchangerate.helper.RetrofitHelper;
+import com.example.chan.myanmarcurrencyexchangerate.common.helper.RetrofitHelper;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -174,79 +174,10 @@ public class CurrencyInfoFragment extends Fragment {
 
             ctListView.setAdapter(adapter);
             ctListView.setVisibility(View.VISIBLE);
-
-            /*ctListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-
-                    // to prevent header click
-                    if (0 == position) {
-                        return;
-                    }
-
-                    LatestService latestService = RetrofitHelper.getLatestExchangeRateApi();
-                    Call<ExchangeRateInfoDto> latestCall = latestService.getLatestExchangeRate();
-                    loadCurrencyInfoDetail(currencyList, position-=1, latestCall);
-                }
-            });*/
         } else {
             showError();
         }
     }
-
-    /*private void loadCurrencyInfoDetail(final List<CurrencyListItemInfoDto> currencyList, final int position, final Call<ExchangeRateInfoDto> call) {
-
-        AsyncTask<Void, Void, ExchangeRateInfoDto> asyncTask = new AsyncTask<Void, Void, ExchangeRateInfoDto>() {
-            boolean isConAvailable;
-            @Override
-            protected ExchangeRateInfoDto doInBackground(Void... voids) {
-                ExchangeRateInfoDto exchangeRateInfoDto = null;
-                if (ConnectionHelper.isInternetAvailable()) {
-                    try {
-                        Response<ExchangeRateInfoDto> response = call.execute();
-                        if (null != response.body()) {
-                            exchangeRateInfoDto = new ExchangeRateInfoDto();
-                            exchangeRateInfoDto.setInfo(response.body().getInfo());
-                            exchangeRateInfoDto.setTimestamp(response.body().getTimestamp());
-                            exchangeRateInfoDto.setDescription(response.body().getDescription());
-                            exchangeRateInfoDto.setRates(response.body().getRates());
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                return exchangeRateInfoDto;
-            }
-
-            @Override
-            protected void onPreExecute() {
-                isConAvailable = ConnectionHelper.isInternetAvailable();
-            }
-
-            @Override
-            protected void onPostExecute(ExchangeRateInfoDto  exchangeRateInfoDto) {
-                if (null != exchangeRateInfoDto) {
-                    String currencyType = currencyList.get(position).getCurrencyType();
-                    String country = currencyList.get(position).getCountry();
-                    String exchangeRate = exchangeRateInfoDto.getRates().get(currencyType);
-                    launchCurrencyInfoDetail(currencyType, country, exchangeRate);
-                } else {
-                    showError();
-                }
-            }
-        };
-
-        asyncTask.execute();
-    }*/
-
-    /*private void launchCurrencyInfoDetail(String currencyType, String country, String exchangeRate) {
-        Intent intent = new Intent(getActivity(), CurrencyDetailActivity.class);
-        intent.putExtra(Constants.CURRENCY_TYPE, currencyType);
-        intent.putExtra(Constants.COUNTRY, country);
-        intent.putExtra(Constants.EXCHANGE_RATE, exchangeRate);
-
-        startActivity(intent);
-    }*/
 
     private List<CurrencyListItemInfoDto> getCurrencyListItemList(Map<String, String> currency) {
         Set<String> keySet = currency.keySet();
@@ -263,6 +194,5 @@ public class CurrencyInfoFragment extends Fragment {
         progressBar.setVisibility(View.GONE);
         errorTextView.setVisibility(View.VISIBLE);
     }
-
 
 }

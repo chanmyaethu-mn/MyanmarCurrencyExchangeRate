@@ -1,0 +1,54 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.chan.myanmarcurrencyexchangerate.fragment.SettingFragment">
+
+
+    <TextView
+        android:id="@+id/tv_change_language"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:text="@string/label_change_language"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/rgrp_language"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <RadioGroup
+        android:id="@+id/rgrp_language"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toEndOf="@+id/tv_change_language"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RadioButton
+            android:id="@+id/rbtn_en"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rbtn_left_custom_switch"
+            android:button="@null"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/label_en"
+            android:textColor="@drawable/rbtn_custom_text_color" />
+
+        <RadioButton
+            android:id="@+id/rbtn_mm"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rbtn_right_custom_switch"
+            android:button="@null"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/label_mm"
+            android:textColor="@drawable/rbtn_custom_text_color" />
+    </RadioGroup>
+
+</android.support.constraint.ConstraintLayout>

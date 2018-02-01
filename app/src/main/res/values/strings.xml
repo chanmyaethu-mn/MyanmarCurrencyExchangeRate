@@ -1,17 +1,11 @@
 <resources>
-    <string name="app_name">MyanmarCurrencyExchangeRate</string>
-    <string name="title_activity_main_drawer">MainDrawerActivity</string>
+    <string name="app_name" translatable="false">MyanmarCurrencyExchangeRate</string>
+    <string name="title_activity_main_drawer" translatable="false">MainDrawerActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_exchangelist_fragment">Hello exchange list fragment</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_currencyinfo_fragment">Hello currency info fragment</string>
 
     <string name="ex_load_error_message">Oop! No data found.</string>
     <string name="no_internet">Oop! No Internet Connection.</string>
@@ -24,6 +18,16 @@
     <string name="country">Country</string>
     <string name="value">Value</string>
     <string name="exchange_rate">Exchange Rate</string>
-
     <string name="cd_value">1/=K</string>
+
+    <string name="label_central_bank">Central Bank</string>
+
+    <string name="label_exchange_list">Exchange List</string>
+    <string name="label_currency_list">Currency List</string>
+    <string name="label_setting">Setting</string>
+
+    <string name="label_change_language">Change Language</string>
+
+    <string name="label_en" translatable="false">EN</string>
+    <string name="label_mm">MM</string>
 </resources>

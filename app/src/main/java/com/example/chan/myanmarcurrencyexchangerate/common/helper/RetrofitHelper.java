@@ -1,4 +1,4 @@
-package com.example.chan.myanmarcurrencyexchangerate.helper;
+package com.example.chan.myanmarcurrencyexchangerate.common.helper;
 
 import com.example.chan.myanmarcurrencyexchangerate.api.CurrencyInfoService;
 import com.example.chan.myanmarcurrencyexchangerate.api.ExchangeHistoryService;

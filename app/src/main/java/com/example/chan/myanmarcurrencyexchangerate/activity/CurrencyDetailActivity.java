@@ -1,5 +1,6 @@
 package com.example.chan.myanmarcurrencyexchangerate.activity;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -7,6 +8,7 @@ import android.widget.TextView;
 
 import com.example.chan.myanmarcurrencyexchangerate.R;
 import com.example.chan.myanmarcurrencyexchangerate.common.Constants;
+import com.example.chan.myanmarcurrencyexchangerate.common.helper.LocaleHelper;
 
 public class CurrencyDetailActivity extends AppCompatActivity {
 
@@ -17,6 +19,11 @@ public class CurrencyDetailActivity extends AppCompatActivity {
     private TextView cdValueTextView;
 
     private TextView cdExchangeRateTextView;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleHelper.onAttach(base));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

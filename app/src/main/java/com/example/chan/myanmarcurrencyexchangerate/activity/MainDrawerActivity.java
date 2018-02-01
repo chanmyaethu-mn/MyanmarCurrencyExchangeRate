@@ -1,7 +1,13 @@
 package com.example.chan.myanmarcurrencyexchangerate.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,24 +16,37 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.chan.myanmarcurrencyexchangerate.R;
 import com.example.chan.myanmarcurrencyexchangerate.common.Constants;
+import com.example.chan.myanmarcurrencyexchangerate.common.helper.LocaleHelper;
 import com.example.chan.myanmarcurrencyexchangerate.fragment.CurrencyInfoFragment;
 import com.example.chan.myanmarcurrencyexchangerate.fragment.ExchangeListFragment;
+import com.example.chan.myanmarcurrencyexchangerate.fragment.SettingFragment;
 
 public class MainDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG_EXCHANGE_LIST = "EXCHANGE_LIST";
-    private static final String TAG_CURRENCY_INFO = "CURRENCY_INFO";
+    private static final String TAG_CURRENCY_LIST = "CURRENCY_CURRENCY_LIST";
+    private static final String TAG_SETTING = "SETTING";
     private static String CURRENT_TAG = TAG_EXCHANGE_LIST;
 
     private static int navItemIndex = 0;
 
     private Handler mHandler;
+
+    private SharedPreferences.OnSharedPreferenceChangeListener prefListener;
+
+    private SharedPreferences prefs;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleHelper.onAttach(base));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +54,8 @@ public class MainDrawerActivity extends AppCompatActivity
         setContentView(R.layout.activity_main_drawer);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        setTitle(getString(R.string.label_exchange_list));
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -53,6 +74,32 @@ public class MainDrawerActivity extends AppCompatActivity
             CURRENT_TAG = TAG_EXCHANGE_LIST;
             loadHomeFragment();
         }
+
+        registerValues();
+
+        registerEvents();
+
+    }
+
+    private void registerValues() {
+        //get default preferences
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+    }
+
+    private void registerEvents() {
+
+        // listen preference changes
+        prefListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+
+                if(Constants.SELECTED_LANGUAGE.equals(key)) {
+                    refreshActivity();
+                }
+            }
+        };
+
+        prefs.registerOnSharedPreferenceChangeListener(prefListener);
     }
 
     @Override
@@ -65,51 +112,28 @@ public class MainDrawerActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_drawer, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-            navItemIndex = 0;
+        if (id == R.id.nav_exchange_list) {
+            // Handle the exchange list action
+            navItemIndex = Constants.EXCHANGE_LIST_INDEX;
             CURRENT_TAG = TAG_EXCHANGE_LIST;
+            setTitle(getString(R.string.label_exchange_list));
             loadHomeFragment();
-        } else if (id == R.id.nav_gallery) {
-            navItemIndex = 1;
-            CURRENT_TAG = TAG_CURRENCY_INFO;
+        } else if (id == R.id.nav_currency_list) {
+            navItemIndex = Constants.CURRENCY_LIST_INDEX;
+            CURRENT_TAG = TAG_CURRENCY_LIST;
+            setTitle(getString(R.string.label_currency_list));
             loadHomeFragment();
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_setting) {
+            navItemIndex = Constants.SETTING_INDEX;
+            CURRENT_TAG = TAG_SETTING;
+            setTitle(getString(R.string.label_setting));
+            loadHomeFragment();
         }
 
         closeDrawer();
@@ -122,9 +146,12 @@ public class MainDrawerActivity extends AppCompatActivity
             case Constants.EXCHANGE_LIST_INDEX:
                 ExchangeListFragment exchangeListFragment = ExchangeListFragment.newInstance(null, null);
                 return exchangeListFragment;
-            case Constants.CURRENCY_INFO_INDEX:
+            case Constants.CURRENCY_LIST_INDEX:
                 CurrencyInfoFragment currencyInfoFragment = CurrencyInfoFragment.newInstance(null, null);
                 return currencyInfoFragment;
+            case Constants.SETTING_INDEX:
+                SettingFragment settingFragment = SettingFragment.newInstance(null, null);
+                return settingFragment;
             default:
                 return null;
         }
@@ -139,6 +166,7 @@ public class MainDrawerActivity extends AppCompatActivity
             return;
         }
 
+        // Load home fragment with thread
         Runnable mPendingRunnable = new Runnable() {
             @Override
             public void run() {
@@ -161,5 +189,15 @@ public class MainDrawerActivity extends AppCompatActivity
     private void closeDrawer() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+    }
+
+    private void refreshActivity() {
+        // Refresh the app
+        Intent intent = new Intent(this, this.getClass());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finishAffinity();
+        /*startActivity(refresh);
+        finish();*/
     }
 }

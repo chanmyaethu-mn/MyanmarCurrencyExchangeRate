@@ -27,10 +27,9 @@ import com.example.chan.myanmarcurrencyexchangerate.common.Constants;
 import com.example.chan.myanmarcurrencyexchangerate.common.helper.ConnectionHelper;
 import com.example.chan.myanmarcurrencyexchangerate.common.helper.DateHelper;
 import com.example.chan.myanmarcurrencyexchangerate.dto.CurrencyInfoDto;
-import com.example.chan.myanmarcurrencyexchangerate.dto.CurrencyListItemInfoDto;
 import com.example.chan.myanmarcurrencyexchangerate.dto.ExchangeListItemInfoDto;
 import com.example.chan.myanmarcurrencyexchangerate.dto.ExchangeRateInfoDto;
-import com.example.chan.myanmarcurrencyexchangerate.helper.RetrofitHelper;
+import com.example.chan.myanmarcurrencyexchangerate.common.helper.RetrofitHelper;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -7,12 +7,11 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.chan.myanmarcurrencyexchangerate.api.CurrencyInfoService;
-import com.example.chan.myanmarcurrencyexchangerate.api.ExchangeHistoryService;
 import com.example.chan.myanmarcurrencyexchangerate.api.LatestService;
 import com.example.chan.myanmarcurrencyexchangerate.dto.CurrencyInfoDto;
 import com.example.chan.myanmarcurrencyexchangerate.dto.ExchangeRateInfoDto;
 import com.example.chan.myanmarcurrencyexchangerate.dto.HistoryExchangeInfoDto;
-import com.example.chan.myanmarcurrencyexchangerate.helper.RetrofitHelper;
+import com.example.chan.myanmarcurrencyexchangerate.common.helper.RetrofitHelper;
 
 import java.io.IOException;
 

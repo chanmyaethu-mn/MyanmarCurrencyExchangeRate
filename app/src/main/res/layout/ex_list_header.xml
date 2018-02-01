@@ -17,7 +17,8 @@
         android:layout_weight="1"
         android:gravity="left|center|start"
         android:text="@string/ex_header_cur_type"
-        android:textSize="18sp"
+        android:textAlignment="viewStart"
+        android:textSize="16sp"
         android:textStyle="bold" />
 
     <TextView
@@ -26,9 +27,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="right|end"
-        android:paddingEnd="16dp"
-        android:paddingRight="16dp"
         android:text="@string/ex_header_ex_rate"
-        android:textSize="18sp"
+        android:textAlignment="viewEnd"
+        android:textSize="16sp"
         android:textStyle="bold" />
 </LinearLayout>
