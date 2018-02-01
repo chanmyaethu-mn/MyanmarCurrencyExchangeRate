@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">MyanmarCurrencyExchangeRate</string>
     <string name="title_activity_main_drawer" translatable="false">MainDrawerActivity</string>
+    <string name="app_launcher_name">CBM-Exchange</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
