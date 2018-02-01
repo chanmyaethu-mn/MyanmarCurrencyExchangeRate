@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -168,6 +169,10 @@ public class ExchangeListFragment extends Fragment {
     }
 
     private void showDatePicker() {
+
+        Locale locale = getResources().getConfiguration().locale;
+        Locale.setDefault(locale);
+
         // calender class's instance and get current date , month and year from calender
         final Calendar c = Calendar.getInstance();
         int mYear = c.get(Calendar.YEAR); // current year

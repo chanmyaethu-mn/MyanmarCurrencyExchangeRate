@@ -23,7 +23,7 @@ public final class Constants {
 
     public static final String LANGUAGE_EN = "en";
 
-    public static final String LANGUAGE_MM = "mm";
+    public static final String LANGUAGE_MM = "my";
 
     public static final String CHANGED_LANGUAGE = "CHANGED_LANGUAGE";
 
